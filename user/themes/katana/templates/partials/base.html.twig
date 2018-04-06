@@ -1,0 +1,386 @@
+{% set theme_config = attribute(config.themes, config.system.pages.theme) %}
+<!DOCTYPE html>
+<html lang="{{ grav.language.getActive ?: theme_config.default_lang }}">
+<head>
+{% block head %}
+    <meta charset="utf-8" />
+    <title>{% if header.title %}{{ header.title|e('html') }} | {% endif %}{{ site.title|e('html') }}</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {# <meta name="viewport" content="width=device-width, initial-scale=1"> #}
+    {% include 'partials/metadata.html.twig' %}
+
+    <link rel="icon" type="image/png" href="{{ url('theme://images/logo.png') }}" />
+    <link rel="canonical" href="{{ page.url(true, true) }}" />
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Montserrat:300,400,500,600,700&amp;subset=cyrillic" rel="stylesheet">
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>      
+    <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-beta.2/lazyload.js"></script>
+  
+
+    {% block stylesheets %}
+        {% do assets.addCss('https://unpkg.com/purecss@1.0.0/build/pure-min.css', 100) %}
+        {% do assets.addCss('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', 99) %}
+        {% do assets.addCss('theme://css/custom.css', 98) %}
+
+    {% endblock %}
+    {{ assets.css() }}
+
+    {% block javascripts %}
+        {% do assets.addJs('jquery', 100) %}
+        {% do assets.addJs('theme://js/vue.js', {'priority':102}) %}                        
+    {% endblock %}
+    {{ assets.js() }}
+
+{% endblock head%}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+</head>
+<body id="top" class="{{ page.header.body_classes }}">
+ 
+
+
+<script type="text/javascript">
+$( document ).ready(function() {
+    lazyload();    
+
+    $('#app').fadeIn();
+    $('#msg').fadeOut();
+
+    $(".phone").mask("+7(999)999-99-99");
+
+    var headerHeight = $('.header').outerHeight() + 80;
+    $('a[href^="#"]').click(function () {
+        var target = $(this).attr('href');        
+        $('html, body').animate({scrollTop: $(target).offset().top - headerHeight }, 800);
+        return false;
+    }); 
+
+    ymaps.ready(init);
+    function init() {
+        var suggestView1 = new ymaps.SuggestView('address-suggest');            
+	}
+
+});
+</script>
+
+
+<div id="msg"style="font-size:largest;">
+<!-- you can set whatever style you want on this -->
+Loading, please wait...123
+
+</div>
+    
+
+<div id="app"  style="display: none">
+{% block header %}
+    <div class="header">
+        <div class="wrapper padding">
+            <a class="logo text-center" href="{{ base_url == '' ? '/' : base_url }}">
+                <img src="user/images/logo.jpg">                
+                <p>{{ config.site.title }}</p>
+            </a>
+            {# <div class="header-phone-cart"> #}
+                <div class="header-phone"><a href="callto:8 (934) 555-00-77" title="Позвонить">8 (934) 555-00-77</a></div>            
+                <button class="show-cart"@click="showCart">
+                    <i class="header-cart fa fa-shopping-cart" aria-hidden="true">
+                        <span v-show="!isCartEmpty" class="products-count">{% raw %} {{ cart.products.length }} {% endraw %}</span>
+                    </i>
+                    Корзина: {% raw %} {{ cart.totalPrice }} {% endraw %} р.
+                </button>
+            {# </div> #}
+
+            
+            {% block header_navigation %}
+            <nav class="main-nav">
+                {% include 'partials/navigation.html.twig' %}
+            </nav>
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="body-background"></div>
+    <section id="body">
+        <div class="content wrapper padding">
+            <div class="content-wrapper">
+
+                <div class="cart-wrapper">
+                    <div class="cart" v-show="cartVisible"> 
+                        <button class="hide-cart" @click="hideCart" title="Скрыть корзину"><i class="fa fa-window-close" aria-hidden="true"></i></button>
+                        <div class="order" v-show="!orderConfirmVisible">
+                            <div class="table-container">
+                                <table> 
+                                    <thead>
+                                        <tr>
+                                            <td>№</td>
+                                            <td>Фото</td>
+                                            <td>Продукт</td>
+                                            <td>Количество</td>
+                                            <td>Цена</td>    
+                                            <td>Сумма</td>
+                                            <td>Удалить</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(product, index) in cart.products">
+                                            <td>
+                                                {% raw %}
+                                                {{ index + 1  }}
+                                                {% endraw %}
+                                            </td>
+                                            <td>
+                                                <img class="cart-product-image" :src="product.image">
+                                            </td>
+                                            <td :title="product.ingredients">                                    
+                                                {% raw %}
+                                                {{ product.title }}
+                                                {% endraw %}
+                                            </td>
+                                            <td>
+                                                <button @click="reduceProductCount(product)" class="count-change-button">-</button>
+                                                {% raw %}
+                                                <span class="product-count">{{ product.count }}</span>
+                                                {% endraw %}
+                                                <button @click="addProductCount(product)" class="count-change-button">+</button>
+                                            </td>
+                                            <td>
+                                                {% raw %}
+                                                {{ product.price }}
+                                                {% endraw %}
+                                            </td>
+                                            <td>
+                                                {% raw %}
+                                                {{ product.count * product.price }}
+                                                {% endraw %}
+                                            </td>
+                                            <td>
+                                                <button class="remove-from-cart" 
+                                                        title="Удалить из корзины" 
+                                                        @click="removeFromCart(product, index)"
+                                                ><i class="fa fa-trash" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
+                                        </tr>                            
+                                    </tbody>                        
+                                </table>
+                            </div>
+                        
+
+                            <div class="totalPrice">
+                                Итого: {% raw %} {{ cart.totalPrice }} {% endraw %} руб.
+                            </div>
+                            
+
+                            <form class="order-form">
+                                <div class="order-input input-name">
+                                    <label>Имя:</label>
+                                    <input type="text" name="name" v-model="name">
+                                </div>
+                                <div class="order-input input-phone">
+                                    <label>Телефон:</label>
+                                    <input type="text" name="phone" class="phone" placeholder="+7(___)___-__-__">
+                                </div>    
+                               <div class="order-input input-address">
+                                    <label>Адрес:</label>
+                                    <input type="text" name="address" class="address" value="Белгород" id="address-suggest" v-model="address">
+                                </div>
+                                <button class="order-button" @click.prevent="cartConfirm">Оформить заказ</button>
+                            </form>
+
+                        </div> 
+                        <div class="order-confirm" v-show="orderConfirmVisible">
+                            <h2>Спасибо за сделанный заказ!</h2>
+                            <p>В ближайшее время мы вам перезвоним.</p>
+                            <button @click="hideCart">OK</button>
+                        </div> 
+
+                    </div>
+
+                </div>
+
+                <div class="category-wrapper">
+                    <div v-for="category in catalog" class="category">                    
+
+                        <h1 :id="category.name">{% raw %} {{ category.title }}  {% endraw %}</h1>
+                        
+                        <div v-for="product in category.products" class="product" :class="product.class" @click="">
+                            <h3>{% raw %} {{ product.title }}{% endraw %}</h3>
+                            <img class="product-image lazyload" :data-src="product.image">                            
+                            <div class="description">
+                                <p class="price">
+                                    <b>Цена:</b>
+                                    {% raw %} 
+                                        {{ product.price }}
+                                    {% endraw %} р.
+                                </p>
+                                <p class="ingredients">
+                                    <b>Состав:</b> 
+                                    {% raw %}
+                                        {{ product.ingredients }}
+                                    {% endraw %}
+                                </p>
+                            </div>
+
+                            <form class="addToCartForm">
+                                <button class="button subFromCart" @click.prevent="substractFromCart(product)">-</button>
+                                <input class="count" :class="product.class" value="0" v-model="product.count">      
+                                <button class="button addToCart" 
+                                        @click.prevent="addToCart(product)"
+                                        >
+                                        +</button>
+                            </form>                   
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>        
+        
+        </div>
+    </section>
+{% endblock %}
+
+</div>
+{% block script %}{% endblock %}
+
+{% block footer %}
+    <div class="footer text-center">
+        <div class="wrapper padding">
+            <p>Катана-суши © 2018 </p>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block bottom %}
+    {{ assets.js('bottom') }}
+{% endblock %}
+
+<script>
+
+var v = new Vue({
+    el: '#app',
+    data: {
+        testClass: 'active',        
+        catalog: catalog,   
+        cartVisible: false,    
+        orderConfirmVisible: false,  
+        name: '' ,
+        // phone: (jQuery('.phone').val)(),        
+        address: 'Белгород',
+        cart: {            
+            totalPrice: 0,
+            products: []
+        }        
+    },
+    computed: {
+        isCartEmpty() {
+            return !this.cart.products.length;
+        },
+        productInCart(product) {
+            console.log(product);
+            if (product.inCart) return ['active'];
+            
+        }
+    },
+    methods: {        
+        showCart() {                        
+            if (this.cart.products.length > 0) this.cartVisible = true;
+        },
+        hideCart() {
+            this.cartVisible = false;
+            this.orderConfirmVisible = false;
+        },
+        addToCart(product) {  
+            var products = this.cart.products;
+
+            product.class = 'active';            
+            product.count++;
+            if (products.indexOf(product) == -1) {
+                this.cart.products.push(product);                          
+            }
+            this.cart.totalPrice += +product.price;            
+        },
+        substractFromCart(product) {
+            var products = this.cart.products;
+
+            if (product.count > 0) {
+                product.count--;                
+                this.cart.totalPrice -= product.price;                
+            } 
+
+            if (products.indexOf(product) !== -1 && product.count == 0) {
+                this.$delete(this.cart.products, products.indexOf(product));                          
+            }
+
+            if (product.count == 0) product.class = '';
+            
+        },
+        removeFromCart(product, index) {            
+            this.cart.products.splice(index, 1);
+            this.cart.totalPrice -= product.count * product.price;
+            product.count = 0;
+            product.class = ''
+
+            if (this.cart.products.length == 0 ) {
+                this.cart.empty = true;
+                this.cartVisible = false;
+            }
+        },
+        addProductCount(product) {
+            product.count++;
+            this.cart.totalPrice += +product.price;
+        },
+        reduceProductCount(product) {
+            if (product.count > 0) {
+                product.count--;
+                this.cart.totalPrice -= +product.price;
+            }            
+        },
+        cartConfirm() {     
+            //send order to email            
+            this.phone = $('.phone').val();  
+            this.address = $('.address').val();                        
+            var products = this.cart.products;   
+            var productsString = JSON.stringify(v.cart.products);
+            var totalSum = this.cart.totalPrice;           
+            
+            var form = '';
+            form += 'name=' + this.name +
+                    '&phone=' + this.phone +            
+                    '&address=' + this.address +
+                    '&order=' + productsString + 
+                    '&totalSum=' + totalSum;
+            
+            $.ajax({
+                type: "POST",
+                url: "mail.php",
+                data: form
+            }).done(function() {               
+                $(this).find("input").val("");            
+            });
+
+
+            //show orderComfirm and clear cart       
+            this.orderConfirmVisible = true;
+                     
+
+            for (var i = 0; i < products.length; i++) {
+                products[i].count = 0;
+                products[i].class = '';
+            }            
+            
+            this.cart.totalPrice = 0;   
+            this.cart.products = [];
+        }        
+    }
+});
+
+</script>
+<script>    
+
+</script>
+
+</body>
+</html>

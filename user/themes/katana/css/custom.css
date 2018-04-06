@@ -1,0 +1,519 @@
+/* Core Stuff */
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#msg {
+    background-color: white;
+    width: 100vw;
+    height: 100vh;
+}
+
+body {
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    /*font-family: 'PT Sans', sans-serif;*/
+    /*font-family: 'Poiret One', cursive;*/
+    /*font-family: 'Ubuntu Condensed', sans-serif;*/
+    /*font-family: 'Roboto Condensed', sans-serif;*/
+    /*font-family: 'Oswald', sans-serif;*/
+    /*font-family: 'Open Sans Condensed', sans-serif;*/
+    /*font-family: 'Lobster', cursive;*/
+    font-weight: 400;
+    line-height: 1.7;
+    color: #606d6e;
+    background-image: url('../images/pattern-bamboo.jpg');
+}
+
+.body-background {
+    /*background-image: url('../images/pattern-bamboo.jpg');
+    position: absolute;
+    height: 100vh;
+    opacity: 0.5;*/
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #454B4D;
+    text-align: center;
+    width: 100%;
+}
+
+a {
+    color: #1F8CD6;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #175E91;
+}
+
+pre {
+    background: #F0F0F0;
+    margin: 1rem 0;
+    border-radius: 2px;
+}
+
+blockquote {
+    border-left: 10px solid #eee;
+    margin: 0;
+    padding: 0 2rem;
+}
+
+/* Utility Classes */
+.wrapper {
+    margin: 0 3rem;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cart {
+    width: 800px;
+    margin: 0 auto;
+    padding: 50px;    
+    border-radius: 15px;    
+    border: 1px dotted #c3c3c3;
+    background-color: #fff9d6;    
+    box-shadow: 0 2px 15px #d4d4d4;
+    position: fixed;
+    /*left: 30%;*/
+    max-height: 55vw;    
+}
+
+.show-cart {
+    border: none;
+    outline: none;
+    color: black;
+    background-color: transparent;    
+}
+
+.show-cart:hover {
+    border-bottom: 1px solid;
+}
+
+.header-cart {
+    position: relative;
+}
+
+.header-phone-cart {
+    /*display: flex;*/
+}
+
+.header-cart .products-count {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    background-color: red;
+    display: block;
+    border-radius: 50%;
+    position: absolute;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.5em;
+    color: white;
+    top: -10px;
+    left: 15px;
+}
+
+.hide-cart {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    background-color: transparent;
+    border: none;
+}
+
+.hide-cart:hover {
+    background-color: darkseagreen;
+}
+
+.cart .table-container {
+    max-height: 500px;
+    margin-right: -360px;
+    padding-right: 345px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.cart table {
+    width: 100%;
+}
+
+.cart table thead {
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.cart tr {
+    vertical-align: middle;
+    border-bottom: 1px dotted #bfbf5b;
+}
+
+.cart td {
+    text-align: center;
+}
+
+.cart .count-change-button {
+    border: 1px dotted #ccc;
+    outline: none;
+    background-color: transparent;
+}
+
+.cart .product-count {
+    margin: 0 10px;
+}
+
+.cart-product-image{
+    width: 50px;
+    margin: 5px;
+}
+
+.cart .remove-from-cart {
+    background: none;
+    border: none;    
+    transition: 0.3s;
+}
+
+.cart .remove-from-cart:hover {
+    background-color: darksalmon;
+    color: moccasin
+    transition: 0.3s;
+}
+
+.cart .totalPrice {
+    text-align: right;
+    font-weight: bold;
+}
+
+.cart .order-button {
+    margin: 0 auto;
+    width: 200px;
+    display: block;
+    box-shadow: 1px 1px 1px #888;
+    background-color: #9acd32;
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    text-shadow: 0 0 6px black;
+    margin-top: 20px;
+    transition: 0.5s;
+}
+
+.cart .order-button:hover {
+    background-color: #529a35;
+    transition: 0.5s;
+}
+
+.cart .order-button:active {
+    background-color: #679012;
+}
+
+.cart .order-form {
+    display: flex;
+    width: 70%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 10px auto;
+}
+
+
+.cart .order-input {
+    width: 44%;
+    display: block;
+    /*margin: 0 auto;*/
+}
+
+.cart .input-address,
+.cart #address-suggest {
+    width: 100%;
+}
+
+.order-confirm {
+    text-align: center;
+}
+
+.category-wrapper {
+    /*margin-top: 80px;*/
+}
+
+.category {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 25px;
+    background-color: white;
+    box-shadow: 0 0 45px #777;
+    margin-bottom: 50px;
+}
+
+.product {
+    display: flex;
+    flex-direction: column;    
+    width: 30%;
+    margin-bottom: 10px;
+    padding: 15px 20px;  
+}
+
+
+.product:hover {
+    outline: 1px solid #eeeeee;
+    box-shadow: 0 2px 5px #eeeeee;
+    transition: box-shadow 0.1s;
+}
+
+.category .active,
+.category .product:hover.active { 
+    box-shadow: 0 0 1px #1a1;
+}
+
+.product h3 {
+    line-height: 1em;
+    text-align: center;
+    font-size: 0.9em;
+    margin: 15px 0;
+}
+
+.product img {
+    width: 100%;    
+}
+
+.product .description {
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+
+.product .ingredients {
+    line-height: 1em;
+    margin: 0;
+}
+
+.addToCartForm {
+    margin-bottom: 10px;    
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    /*border: 1px solid #eeeeee;*/
+}
+
+.addToCartForm .button {
+    flex-grow: 1;
+    border: 1px solid #eeeeee;
+    background: none;
+    outline: none;
+}
+
+.addToCart:active {
+    background-color: #e3f3e3;
+}
+
+.addToCartForm .subFromCart:active {
+    background-color: #fdd4d4;
+}
+
+.addToCartForm input {
+    margin: 0 10px;
+    border: 1px solid #eeeeee;
+}
+
+.product .count {
+    width: 30%;
+    height: 2em;
+    text-align: center;
+}
+
+.shoppingcart-categories {
+    display: none;
+}
+
+
+.padding {
+    padding: 3rem 1rem;
+}
+
+.content {
+    padding-top: 120px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+/* Content Styling */
+.header .padding {
+    padding: 1rem 0;
+}
+
+.header {
+    background-color: #fff;
+    color: #eee;
+    min-height: 75px;  
+    box-shadow: 0 0 20px #555;
+    position: fixed;
+    width: 100%;
+}
+
+.header a {
+    color: #000;
+}
+
+.header .logo {
+    font-size: 1.7rem;
+    text-transform: uppercase;    
+}
+
+.header img {
+    height: 50px;
+    vertical-align: middle;
+}
+
+.header .logo p {
+    margin: 0;  
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: lighter;
+}
+
+.header-phone {
+    display: inline-block;    
+    color: black;
+    margin: 0 auto;
+    width: 30%;
+    text-align: center;
+}
+
+.header-cart {
+    color: black;
+    font-size: 1.6em;
+    margin-right: 10px;
+}
+
+.footer {
+    background-color: #eee;
+}
+
+/* Menu Settings */
+.main-nav {
+    float: right;
+    display: inline-block;
+}
+
+.main-nav ul {
+    text-align: right;
+    letter-spacing: -1em;
+    margin: 0;
+    padding: 0;
+}
+
+.main-nav ul li {
+    display: inline-block;
+    letter-spacing: normal;
+    background-color: yellowgreen;
+}
+
+.main-nav ul li a {
+    position: relative;
+    display: block;
+    line-height: 45px;
+    color: #fff;
+    padding: 0 20px;
+    white-space: nowrap;
+}
+
+.main-nav > ul > li > a {
+    border-radius: 2px;
+}
+
+/*Active dropdown nav item */
+.main-nav ul li:hover > a {
+    background-color: #175E91;
+}
+
+/* Selected Dropdown nav item */
+.main-nav ul li.selected > a {
+    background-color: #fff;
+    color: #175E91;
+}
+
+/* Dropdown CSS */
+.main-nav ul li {position: relative;}
+
+.main-nav ul li ul {
+    position: absolute;
+    background-color: #1F8DD6;
+    min-width: 100%;
+    text-align: left;
+    z-index: 999;
+
+    display: none;
+}
+.main-nav ul li ul li {
+    display: block;
+}
+
+/* Dropdown CSS */
+.main-nav ul li ul ul {
+    left: 100%;
+    top: 0;
+}
+
+/* Active on Hover */
+.main-nav li:hover > ul {
+    display: block;
+}
+
+/* Child Indicator */
+.main-nav .has-children > a {
+    padding-right: 30px;
+}
+.main-nav .has-children > a:after {
+    font-family: FontAwesome;
+    content: '\f107';
+    position: absolute;
+    display: inline-block;
+    right: 8px;
+    top: 0;
+}
+
+.main-nav .has-children .has-children > a:after {
+    content: '\f105';
+}
+
+@media (max-width: 1000px) {
+    .product {
+        width: 40%;
+    }
+}
+
+
+@media (max-width: 640px) {
+    .product {
+        width: 100%;
+    }
+}

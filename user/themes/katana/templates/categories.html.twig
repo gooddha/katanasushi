@@ -1,0 +1,36 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block script %}
+	<script class="temporary">
+		var catalog = {};
+	</script>
+
+    	{% for category in page.collection %}
+    	<script class="temporary">
+    		catalog['{{ category.header.category }}'] = {};
+    		catalog['{{ category.header.category }}'].products = {};	
+    		catalog['{{ category.header.category }}'].name = '{{ category.header.category }}';
+    		catalog['{{ category.header.category }}'].title = '{{ category.header.title }}';
+    	</script>
+
+			{% for product in category.children %}
+				<script class="temporary">					
+					catalog['{{ category.header.category }}'].products['{{ product.header.product_id }}'] = {
+						title: '{{ product.header.title }}',
+						image: '{{ product.media.images | first.url }}',
+						price: '{{ product.header.price }}',
+						ingredients: '{{ product.header.ingredients }}',
+						count: 0
+					};
+				</script>
+			{% endfor %}
+		
+		{% endfor %}	
+	<script class="temporary">
+	console.log(catalog);
+	//Delete sripts created while twig prepared catalog
+	$(document).ready(function() {    
+	    $('.temporary').remove();
+	});
+	</script>
+{% endblock %}
