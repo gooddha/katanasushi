@@ -1,0 +1,17 @@
+title: 'Катана Суши'
+default_lang: ru
+author:
+  name: 'Andrey Adamovich'
+  email: john@email.com
+taxonomies:
+  - category
+  - tag
+metadata:
+  description: 'Катана Суши - доставка самых вкусных суши в Белгороде'
+summary:
+  enabled: true
+  format: short
+  size: 300
+  delimiter: '==='
+blog:
+  route: /blog

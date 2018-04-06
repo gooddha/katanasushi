@@ -1,0 +1,8 @@
+enabled: false
+payment:
+  methods:
+    stripe:
+      name: Stripe
+      description: 'Test description'
+      secretKey: ''
+      publicKey: ''

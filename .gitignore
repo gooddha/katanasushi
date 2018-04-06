@@ -1,0 +1,7 @@
+/assets
+/backup
+/cache
+/images
+/logs/*
+/system
+/vendor
